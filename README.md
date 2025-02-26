@@ -2,6 +2,11 @@
 
 Next.js 13+ の App Router を使用し、**Redux** と **React Suspense** を組み合わせた実装方法を説明します。
 
+## 概要
+
+**・Server & Client Components の適切な Suspense の利用**  
+**・Redux の適切な活用（Client Components 内のみ）**
+
 ## プロジェクト構成
 ```
 app/
@@ -70,6 +75,3 @@ app/
 
 ---
 
-### このプロジェクトで実現できること:
-**Server & Client Components の適切な Suspense の利用**  
-**Redux の適切な活用（Client Components 内のみ）**
