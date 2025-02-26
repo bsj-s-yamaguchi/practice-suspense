@@ -1,14 +1,31 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchData } from '../lib/fetchData';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { setData } from '../store/dataSlice';
+import Providers from './Providers';
 
-export default function ClientComponent() {
-  const [data, setData] = useState<string | null>(null);
+interface ClientComponentProps {
+  data: string | null;
+}
+
+export default function ClientComponent({ data }: ClientComponentProps) {
+  console.log("hoge")
+  return (
+    <Providers>
+      <ClientComponentInner data={data} />
+    </Providers>
+  );
+}
+
+function ClientComponentInner({ data }: ClientComponentProps) {
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    fetchData().then(setData);
-  }, []);
+    if (data !== null) {
+      dispatch(setData(data));
+    }
+  }, [data, dispatch]);
 
   return <div>Client Data: {data ?? 'Loading...'}</div>;
 }
