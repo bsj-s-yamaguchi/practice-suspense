@@ -1,0 +1,27 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { fetchData } from '../lib/fetchData';
+
+export const fetchDataThunk = createAsyncThunk('data/fetchData', async () => {
+  return await fetchData();
+});
+
+const dataSlice = createSlice({
+  name: 'data',
+  initialState: {
+    value: '',
+    loading: false,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchDataThunk.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDataThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.value = action.payload;
+      });
+  },
+});
+
+export default dataSlice.reducer;

@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Redux と Suspense を活用した Next.js 13+ (App Router)の使い方
 
-## Getting Started
+Next.js 13+ の App Router を使用し、**Redux** と **React Suspense** を組み合わせた実装方法を説明します。
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## プロジェクト構成
+```
+app/
+│── ss/   (サーバー -> サーバー)
+│   │── page.tsx
+│   │── ServerComponent.tsx
+│
+│── sc/   (サーバー -> クライアント)
+│   │── page.tsx
+│   │── ClientComponent.tsx
+│
+│── cs/   (クライアント -> サーバー)
+│   │── page.tsx
+│   │── ServerComponent.tsx
+│
+│── cc/   (クライアント -> クライアント)
+│   │── page.tsx
+│   │── ClientComponent.tsx
+│   │── ReduxClientComponent.tsx
+│   │── layout.tsx
+│
+│── lib/
+│   ├── fetchData.ts  (データ取得関数)
+│
+└── store/
+    ├── store.ts  (Reduxストア設定)
+    ├── dataSlice.ts  (Reduxのスライス)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 各フォルダの説明
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **1️ サーバー -> サーバー (`ss/`)
+- 親 (`page.tsx`): **サーバーコンポーネント**
+- 子 (`ServerComponent.tsx`): **サーバーコンポーネント**
+- **Suspense**: サーバー側の非同期処理の待機に使用
 
-## Learn More
+### **2️ サーバー -> クライアント (`sc/`)
+- 親 (`page.tsx`): **サーバーコンポーネント**
+- 子 (`ClientComponent.tsx`): **クライアントコンポーネント**
+- **Suspense**: クライアントのレンダリング待機に使用
 
-To learn more about Next.js, take a look at the following resources:
+### **3️ クライアント -> サーバー (`cs/`)
+- 親 (`page.tsx`): **クライアントコンポーネント**
+- 子 (`ServerComponent.tsx`): **サーバーコンポーネント**
+- **Suspense**: 不要（サーバーコンポーネントは事前にレンダリングされるため）
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### **4️ クライアント -> クライアント (`cc/`)
+- 親 (`page.tsx`): **クライアントコンポーネント**
+- 子 (`ClientComponent.tsx`): **クライアントコンポーネント**
+- 子 (`ReduxClientComponent.tsx`): **クライアントコンポーネント**
+- **Redux** を使用
+- **Suspense**: Redux の非同期状態更新の待機に使用
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🎯 まとめ
+| フォルダ | 親 | 子 | Suspense | Redux |
+|--------|--------|--------|----------|------|
+| `ss/` | サーバー | サーバー | ✅ 可能 | ❌ なし |
+| `sc/` | サーバー | クライアント | ✅ 可能 | ✅ あり |
+| `cs/` | クライアント | サーバー | ❌ 不要 | ❌ なし |
+| `cc/` | クライアント | クライアント | ✅ 可能 | ✅ あり |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### このプロジェクトで実現できること:
+**Server & Client Components の適切な Suspense の利用**  
+**Redux の適切な活用（Client Components 内のみ）**
