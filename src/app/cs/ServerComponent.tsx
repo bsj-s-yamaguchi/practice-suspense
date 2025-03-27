@@ -1,3 +1,4 @@
+'use server'
 import { fetchData } from '../lib/fetchData';
 
 export default async function ServerComponent() {
